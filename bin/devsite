@@ -46,6 +46,25 @@ function devsite() {
   [ $CONFIG_READONLY ] && chmod u-w "$CONFIG_PATH"
 }
 
+# Utility function to create a yes/no prompt.
+# Code inspired by http://ubuntuforums.org/showthread.php?t=436799
+#
+# Usage:
+#   yesno "Would you like to do something?"
+#   [ "$CONFIRM" == 'y' ] && echo 'They said yes'
+function yesno() {
+  while true
+  do
+    echo -n "$1 (y or n): "
+    read CONFIRM
+    case $CONFIRM in
+      y|Y|yes|Yes|YES) CONFIRM='y'; break ;;
+      n|N|no|No|NO) CONFIRM='n'; break ;;
+      *) echo Please enter only y or n.
+    esac
+  done
+}
+
 main() {
   devsite
 }
