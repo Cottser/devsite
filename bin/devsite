@@ -45,3 +45,7 @@ function devsite() {
   # Change the CONFIG_PATH directory back to the original permissions if applicable.
   [ $CONFIG_READONLY ] && chmod u-w "$CONFIG_PATH"
 }
+
+main() {
+  devsite
+}
