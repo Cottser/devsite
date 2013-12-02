@@ -49,3 +49,5 @@ function devsite() {
 main() {
   devsite
 }
+
+main "$@"
