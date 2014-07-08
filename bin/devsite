@@ -8,10 +8,10 @@ function devsite() {
   fi
 
   write_settings_files "$@"
+  create_db "$@"
 
   # @todo Optionally write database name to settings.local.php if a database name
   #   is passed in. Or accept the format of 'mysite.dev' and change it to 'mysite_dev'.
-  # @todo Create database if it doesn't exist.
   # @todo Add hosts file entry.
   # @todo Add VirtualHost entry.
   # @todo Restart Apache (ask for password up front)
@@ -34,6 +34,13 @@ function write_settings_files() {
   [ "$CONFIRM" == 'y' ] && cp -f ~/Sites/default_files/drupal$DRUPAL_VERSION/settings.local.php $CONFIG_PATH
 }
 
+# Create the database if it doesn't yet exist.
+function create_db() {
+  # Remove the database details from the SQL connection details.
+  local SQL_CONNECTION="$(echo $(drush sql-connect) | sed -E "s/--database=[^ ]+ //")"
+  # Create the database if it doesn't exist.
+  $($SQL_CONNECTION --execute="CREATE DATABASE IF NOT EXISTS $DB_NAME")
+}
 # Utility function to create a yes/no prompt.
 # Code inspired by http://ubuntuforums.org/showthread.php?t=436799
 #
@@ -67,6 +74,8 @@ main() {
   fi
 
   local CONFIG_PATH="$(drush php-eval 'echo DRUPAL_ROOT . "/" . conf_path();')"
+
+  local DB_NAME="$(echo $1 | sed "s/\./_/g")"
 
   devsite "$@"
 }
