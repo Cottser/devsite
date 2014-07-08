@@ -20,13 +20,11 @@ function devsite() {
   [ $CONFIG_READONLY ] && chmod u-w "$CONFIG_PATH"
 }
 
+# Write settings.local.php.
 function write_settings_files() {
-  # Confirm overwrite of existing settings.php file.
-  CONFIRM='y'
-  if [ -e "$CONFIG_PATH/settings.php" ]; then
-    yesno "Overwrite existing settings.php file?"
-  fi
-  [ "$CONFIRM" == 'y' ] && cp -f ~/Sites/default_files/drupal$DRUPAL_VERSION/settings.php $CONFIG_PATH
+  # @todo Add back settings.php overwrite? So far it's just been annoying. It
+  #   would be better if we just checked for settings.local.php being included
+  #   in the settings file and appended if necessary.
 
   # Confirm overwrite of existing settings.local.php file.
   CONFIRM='y'
