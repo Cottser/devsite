@@ -60,7 +60,25 @@ function yesno() {
   done
 }
 
+# Main function.
+#
+# Checks number of arguments and provides help text.
+#
+# Performs other checks and creates some basic variables then calls devsite()
+# to start making things happen.
 main() {
+  if [ "$#" -ne 1 ]; then
+    echo "Quickly spin up a Drupal site."
+    echo
+    echo "Usage: devsite example.dev"
+    echo
+    echo "Run from the root of a Drupal site and specify the VirtualHost."
+    echo
+    echo "The VirtualHost is used to generate the database name as well, in the"
+    echo "example above the database would be example_dev."
+    return;
+  fi;
+
   local DRUPAL_VERSION="$(drush php-eval 'echo drush_drupal_major_version();')"
   if [ ! $DRUPAL_VERSION ]; then
     echo "No Drupal installation found."
@@ -75,6 +93,10 @@ main() {
 
   local CONFIG_PATH="$(drush php-eval 'echo DRUPAL_ROOT . "/" . conf_path();')"
 
+  # Generate a database name by replacing dots with underscores in the provided
+  # VirtualHost.
+  # @todo Check for valid first argument, for example it should not contain
+  #   whitespace and needs to be able to be used as a VirtualHost.
   local DB_NAME="$(echo $1 | sed "s/\./_/g")"
 
   devsite "$@"
