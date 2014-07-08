@@ -9,9 +9,8 @@ function devsite() {
 
   write_settings_files "$@"
   create_db "$@"
+  write_db_settings "$@"
 
-  # @todo Optionally write database name to settings.local.php if a database name
-  #   is passed in. Or accept the format of 'mysite.dev' and change it to 'mysite_dev'.
   # @todo Add hosts file entry.
   # @todo Add VirtualHost entry.
   # @todo Restart Apache (ask for password up front)
@@ -38,7 +37,17 @@ function create_db() {
   # Create the database if it doesn't exist.
   $($SQL_CONNECTION --execute="CREATE DATABASE IF NOT EXISTS $DB_NAME")
 }
+
+# Write the name of the database to settings.local.php.
+function write_db_settings() {
+  local TEMP_FILE="/tmp/devsite_$DB_NAME.tmp"
+  sed "s/'database' => '_dev'/'database' => '$DB_NAME'/" < "$CONFIG_PATH/settings.local.php" > $TEMP_FILE &&
+  cp $TEMP_FILE "$CONFIG_PATH/settings.local.php"
+  rm $TEMP_FILE
+}
+
 # Utility function to create a yes/no prompt.
+#
 # Code inspired by http://ubuntuforums.org/showthread.php?t=436799
 #
 # Usage:
