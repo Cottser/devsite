@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Performs and delegates most of the main operations.
+#
+# main() sets things up and calls this function.
 function devsite() {
   # Check if CONFIG_PATH is writable. If it isn't, try to change it.
   if [ ! -w "$CONFIG_PATH" ]; then
