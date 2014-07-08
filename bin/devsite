@@ -8,6 +8,7 @@ function devsite() {
   fi
 
   write_settings_files "$@"
+  write_drushrc "$@"
   create_db "$@"
   write_db_settings "$@"
 
@@ -28,6 +29,17 @@ function write_settings_files() {
     yesno "Overwrite existing settings.local.php file?"
   fi
   [ "$CONFIRM" == 'y' ] && cp -f ~/Sites/default_files/drupal$DRUPAL_VERSION/settings.local.php $CONFIG_PATH
+}
+
+# Write a very basic drushrc.php so that things like `drush uli` just work.
+function write_drushrc() {
+  if [ ! -e "$CONFIG_PATH/drushrc.php" ]; then
+    cat << __EOF > "$CONFIG_PATH/drushrc.php"
+<?php
+
+\$options['l'] = "http://$1";
+__EOF
+  fi
 }
 
 # Create the database if it doesn't yet exist.
