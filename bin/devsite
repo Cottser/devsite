@@ -15,9 +15,6 @@ function devsite() {
   # @todo Add hosts file entry.
   # @todo Add VirtualHost entry.
   # @todo Restart Apache (ask for password up front)
-
-  # Change the CONFIG_PATH directory back to the original permissions if applicable.
-  [ $CONFIG_READONLY ] && chmod u-w "$CONFIG_PATH"
 }
 
 # Write settings.local.php.
