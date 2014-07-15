@@ -114,11 +114,11 @@ main() {
 
   local CONFIG_PATH="$(drush php-eval 'echo DRUPAL_ROOT . "/" . conf_path();')"
 
-  # Generate a database name by replacing dots with underscores in the provided
-  # VirtualHost.
+  # Generate a database name. Force lowercase and replace any non-alphanumeric
+  # characters with underscores.
   # @todo Check for valid first argument, for example it should not contain
   #   whitespace and needs to be able to be used as a VirtualHost.
-  local DB_NAME="$(echo $1 | sed "s/\./_/g")"
+  local DB_NAME="$(echo $1 | sed -e "s/[^a-zA-Z0-9]/_/g" | tr '[:upper:]' '[:lower:]')"
 
   devsite "$@"
 }
