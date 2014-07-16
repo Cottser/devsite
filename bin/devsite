@@ -103,7 +103,7 @@ function yesno() {
 # to start making things happen.
 main() {
   if [ "$#" -ne 1 ]; then
-    echo "Quickly spin up a Drupal site."
+    echo "Quickly set up a local copy of a Drupal site."
     echo
     echo "Usage: devsite example.dev"
     echo
