@@ -107,7 +107,7 @@ main() {
     echo
     echo "Usage: devsite example.dev"
     echo
-    echo "Run from the root of a Drupal site and specify the VirtualHost."
+    echo "Run from anywhere within a Drupal site and specify the VirtualHost."
     echo
     echo "The VirtualHost is used to generate the database name as well, in the"
     echo "example above the database would be example_dev."
