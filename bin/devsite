@@ -32,7 +32,9 @@ function write_settings_files() {
   # @todo Check to see if settings.local.php include needs to be appended if
   #   the settings file already exists.
   if [ ! -e "$CONFIG_PATH/settings.php" ]; then
+    echo -n "Writing settings.php file... "
     cp -f ~/Sites/default_files/drupal$DRUPAL_VERSION/settings.php $CONFIG_PATH
+    echo "done"
   fi
 
   # Confirm overwrite of existing settings.local.php file.
@@ -40,34 +42,44 @@ function write_settings_files() {
   if [ -e "$CONFIG_PATH/settings.local.php" ]; then
     yesno "Overwrite existing settings.local.php file?"
   fi
-  [ "$CONFIRM" == 'y' ] && cp -f ~/Sites/default_files/drupal$DRUPAL_VERSION/settings.local.php $CONFIG_PATH
+  if [ "$CONFIRM" == 'y' ]; then
+    echo -n "Writing settings.local.php file... "
+    cp -f ~/Sites/default_files/drupal$DRUPAL_VERSION/settings.local.php $CONFIG_PATH
+    echo "done"
+  fi
 }
 
 # Write a very basic drushrc.php so that things like `drush uli` just work.
 function write_drushrc() {
   if [ ! -e "$CONFIG_PATH/drushrc.php" ]; then
+    echo -n "Writing drushrc.php file... "
     cat << __EOF > "$CONFIG_PATH/drushrc.php"
 <?php
 
 \$options['l'] = "http://$1";
 __EOF
+    echo "done"
   fi
 }
 
 # Create the database if it doesn't yet exist.
 function create_db() {
+  echo -n "Creating database $DB_NAME if it doesn't exist yet... "
   # Remove the database details from the SQL connection details.
   local SQL_CONNECTION="$(echo $(drush sql-connect) | sed -E "s/--database=[^ ]+ //")"
   # Create the database if it doesn't exist.
   $($SQL_CONNECTION --execute="CREATE DATABASE IF NOT EXISTS $DB_NAME")
+  echo "done"
 }
 
 # Write the name of the database to settings.local.php.
 function write_db_settings() {
+  echo -n "Writing database details to settings.local.php... "
   local TEMP_FILE="/tmp/devsite_$DB_NAME.tmp"
   sed "s/'database' => '_dev'/'database' => '$DB_NAME'/" < "$CONFIG_PATH/settings.local.php" > $TEMP_FILE &&
   cp $TEMP_FILE "$CONFIG_PATH/settings.local.php"
   rm $TEMP_FILE
+  echo "done"
 }
 
 # Create the VirtualHost, add to /etc/hosts, restart Apache.
