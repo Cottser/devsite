@@ -4,6 +4,9 @@
 #
 # main() sets things up and calls this function.
 function devsite() {
+  # Ask for sudo, mostly needed for virtualhost.sh.
+  sudo -v
+
   # Check if CONFIG_PATH is writable. If it isn't, try to change it.
   if [ ! -w "$CONFIG_PATH" ]; then
     local CONFIG_READONLY=1
@@ -15,9 +18,13 @@ function devsite() {
   create_db "$@"
   write_db_settings "$@"
 
-  # @todo Add hosts file entry.
-  # @todo Add VirtualHost entry.
-  # @todo Restart Apache (ask for password up front)
+  which -s virtualhost.sh
+  if [[ $? == 0 ]] ; then
+    create_virtualhost "$@"
+  else
+    echo
+    echo "Notice: virtualhost.sh is required for automatic VirtualHost setup."
+  fi
 }
 
 # Write settings.local.php.
@@ -59,6 +66,11 @@ function write_db_settings() {
   sed "s/'database' => '_dev'/'database' => '$DB_NAME'/" < "$CONFIG_PATH/settings.local.php" > $TEMP_FILE &&
   cp $TEMP_FILE "$CONFIG_PATH/settings.local.php"
   rm $TEMP_FILE
+}
+
+# Create the VirtualHost, add to /etc/hosts, restart Apache.
+function create_virtualhost() {
+  sudo BATCH_MODE="yes" SKIP_VERSION_CHECK="yes" LOG_FOLDER="~/Sites/logs" SKIP_BROWSER="yes" CREATE_INDEX="no" virtualhost.sh "$1" "$DRUPAL_ROOT"
 }
 
 # Utility function to create a yes/no prompt.
@@ -112,6 +124,7 @@ main() {
     return 1
   fi
 
+  local DRUPAL_ROOT="$(drush php-eval 'echo DRUPAL_ROOT')"
   local CONFIG_PATH="$(drush php-eval 'echo DRUPAL_ROOT . "/" . conf_path();')"
 
   # Generate a database name. Force lowercase and replace any non-alphanumeric
