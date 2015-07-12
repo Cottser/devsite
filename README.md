@@ -7,11 +7,7 @@ also in very early development so there will be more documentation to come.
 
 ## Optional dependencies
 
-This becomes a lot more useful with [virtualhost.sh](https://github.com/pgib/virtualhost.sh),
+This becomes a lot more useful with [virtualhost.sh](https://github.com/virtualhost/virtualhost.sh),
 installable via Homebrew:
 
     brew install virtualhost.sh
-
-If you sometimes have an extra level of nesting within your DocumentRoot (for
-example a `docroot` folder), then keep an eye on [this virtualhost.sh issue](https://github.com/pgib/virtualhost.sh/pull/53)
-or install [my fork](https://github.com/Cottser/virtualhost.sh).
