@@ -85,7 +85,7 @@ function write_db_settings() {
       ;;
   esac
 
-  cp $TEMP_FILE "$CONFIG_PATH/settings.local.php"
+  cp -f $TEMP_FILE "$CONFIG_PATH/settings.local.php"
   rm $TEMP_FILE
   echo "done"
 }
