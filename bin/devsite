@@ -29,11 +29,14 @@ function devsite() {
 
 # Write settings.local.php.
 function write_settings_files() {
-  # @todo Check to see if settings.local.php include needs to be appended if
-  #   the settings file already exists.
   if [ ! -e "$CONFIG_PATH/settings.php" ]; then
     echo -n "Writing settings.php file... "
     cp -f ~/Sites/default_files/drupal$DRUPAL_VERSION/settings.php $CONFIG_PATH
+    echo "done"
+  elif ! grep -q "settings.local.php" "$CONFIG_PATH/settings.php"; then
+    echo -n "Appending settings.local.php include to settings.php file... "
+    echo >> "$CONFIG_PATH/settings.php"
+    cat ~/Sites/default_files/drupal$DRUPAL_VERSION/settings-local-include.php >> "$CONFIG_PATH/settings.php"
     echo "done"
   fi
 
