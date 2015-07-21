@@ -18,8 +18,7 @@ function devsite() {
   create_db "$@"
   write_db_settings "$@"
 
-  which -s virtualhost.sh
-  if [[ $? == 0 ]] ; then
+  if which -s virtualhost.sh; then
     create_virtualhost "$@"
   else
     echo
