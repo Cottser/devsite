@@ -112,12 +112,12 @@ main() {
   if [ "$#" -ne 1 ]; then
     echo "Quickly set up a local copy of a Drupal site."
     echo
-    echo "Usage: devsite example.dev"
+    echo "Usage: devsite example.localhost"
     echo
     echo "Run from anywhere within a Drupal site and specify the VirtualHost."
     echo
     echo "The VirtualHost is used to generate the database name as well, in the"
-    echo "example above the database would be example_dev."
+    echo "example above the database would be example_localhost."
     return;
   fi;
 
