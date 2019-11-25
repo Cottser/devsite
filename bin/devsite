@@ -61,8 +61,12 @@ function write_db_settings() {
 
   sed "s/'database' => '_dev'/'database' => '$DB_NAME'/" < "$CONFIG_PATH/settings.local.php" > $TEMP_FILE
 
-  cp -f $TEMP_FILE "$CONFIG_PATH/settings.local.php"
-  rm $TEMP_FILE
+  # Change root/root to prefer socket connection.
+  sed "s/'username' => 'root'/'username' => '$(whoami)'/" < $TEMP_FILE > $TEMP_FILE.2
+  sed "s/'password' => 'root'/'password' => ''/" < $TEMP_FILE.2 > $TEMP_FILE.3
+
+  cp -f $TEMP_FILE.3 "$CONFIG_PATH/settings.local.php"
+  rm $TEMP_FILE $TEMP_FILE.2 $TEMP_FILE.3
   echo "done"
 }
 
@@ -71,6 +75,9 @@ function create_db() {
   echo -n "Creating database $DB_NAME if it doesn't exist yet... "
   # Remove the database details from the SQL connection details.
   local SQL_CONNECTION="$(echo $(drush sql-connect) | sed -E "s/--database=[^ ]+ //")"
+
+  # @todo Could add error handling here.
+
   # Create the database if it doesn't exist.
   $($SQL_CONNECTION --execute="CREATE DATABASE IF NOT EXISTS $DB_NAME")
   echo "done"
