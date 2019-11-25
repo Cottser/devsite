@@ -69,13 +69,7 @@ function write_db_settings() {
   echo -n "Writing database details to settings.local.php... "
   local TEMP_FILE="/tmp/devsite_$DB_NAME.tmp"
 
-  # The database settings are formatted differently for D6 vs. D7.
-  case $DRUPAL_VERSION in
-    [7-8]) sed "s/'database' => '_dev'/'database' => '$DB_NAME'/" < "$CONFIG_PATH/settings.local.php" > $TEMP_FILE
-      ;;
-    6) sed "s/\/_dev/\/$DB_NAME/" < "$CONFIG_PATH/settings.local.php" > $TEMP_FILE
-      ;;
-  esac
+  sed "s/'database' => '_dev'/'database' => '$DB_NAME'/" < "$CONFIG_PATH/settings.local.php" > $TEMP_FILE
 
   cp -f $TEMP_FILE "$CONFIG_PATH/settings.local.php"
   rm $TEMP_FILE
@@ -127,8 +121,8 @@ main() {
     return 1
   fi
 
-  # Currently Drupal 6 through 8 are supported.
-  if [ $DRUPAL_VERSION -lt 6 -o $DRUPAL_VERSION -gt 8 ]; then
+  # Currently Drupal 7 through 8 are supported.
+  if [ $DRUPAL_VERSION -lt 7 -o $DRUPAL_VERSION -gt 8 ]; then
     echo "Drupal $DRUPAL_VERSION is not supported."
     return 1
   fi
@@ -137,7 +131,7 @@ main() {
   case $DRUPAL_VERSION in
     8) local CONFIG_PATH="$(drush php-eval 'echo DRUPAL_ROOT . "/" . Drupal\Core\DrupalKernel::findSitePath(Symfony\Component\HttpFoundation\Request::createFromGlobals());')"
       ;;
-    [6-7]) local CONFIG_PATH="$(drush php-eval 'echo DRUPAL_ROOT . "/" . conf_path();')"
+    7) local CONFIG_PATH="$(drush php-eval 'echo DRUPAL_ROOT . "/" . conf_path();')"
       ;;
   esac
 

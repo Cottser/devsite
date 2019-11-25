@@ -45,7 +45,7 @@ Short array syntax is optional, but the `_dev` database name is important as tha
 
 ## Compatibility and known issues
 
-- Has been tested with Drupal 6, Drupal 7, and Drupal 8
+- Has been tested with Drupal 7 and Drupal 8
 - Mostly tested on macOS. Should be compatible with other OSes, if you run into problems file an issue
 - Support for multisite is shaky at best
 
