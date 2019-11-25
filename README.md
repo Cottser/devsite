@@ -17,8 +17,8 @@ devsite will attempt to:
 1. Copy `settings.php` into place if it doesn't exist or ensure `settings.local.php` is included from an existing `settings.php`
 2. Copy `settings.local.php` into place if it doesn't exist
 3. Write basic `drushrc.php` with site URI
-4. Create the `example_localhost` database (more details on this in the Setup section)
-5. Write your database name to `settings.local.php`
+4. Write your database name and connection details to `settings.local.php`
+5. Create the `example_localhost` database (more details on this in the Setup section)
 
 ## Setup
 

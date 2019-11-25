@@ -12,8 +12,8 @@ function devsite() {
 
   write_settings_files "$@"
   write_drushrc "$@"
-  create_db "$@"
   write_db_settings "$@"
+  create_db "$@"
 }
 
 # Write settings.local.php.
@@ -54,17 +54,7 @@ __EOF
   fi
 }
 
-# Create the database if it doesn't yet exist.
-function create_db() {
-  echo -n "Creating database $DB_NAME if it doesn't exist yet... "
-  # Remove the database details from the SQL connection details.
-  local SQL_CONNECTION="$(echo $(drush sql-connect) | sed -E "s/--database=[^ ]+ //")"
-  # Create the database if it doesn't exist.
-  $($SQL_CONNECTION --execute="CREATE DATABASE IF NOT EXISTS $DB_NAME")
-  echo "done"
-}
-
-# Write the name of the database to settings.local.php.
+# Write the database connection details to settings.local.php.
 function write_db_settings() {
   echo -n "Writing database details to settings.local.php... "
   local TEMP_FILE="/tmp/devsite_$DB_NAME.tmp"
@@ -73,6 +63,16 @@ function write_db_settings() {
 
   cp -f $TEMP_FILE "$CONFIG_PATH/settings.local.php"
   rm $TEMP_FILE
+  echo "done"
+}
+
+# Create the database if it doesn't yet exist.
+function create_db() {
+  echo -n "Creating database $DB_NAME if it doesn't exist yet... "
+  # Remove the database details from the SQL connection details.
+  local SQL_CONNECTION="$(echo $(drush sql-connect) | sed -E "s/--database=[^ ]+ //")"
+  # Create the database if it doesn't exist.
+  $($SQL_CONNECTION --execute="CREATE DATABASE IF NOT EXISTS $DB_NAME")
   echo "done"
 }
 
